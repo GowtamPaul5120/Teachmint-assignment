@@ -84,6 +84,7 @@ const ProfilePage = () => {
         setPauseTime((prevPauseTime) => !prevPauseTime);
     };
 
+    ////////////// modal functions
     const openModal = (post) => {
         setModalShow(post);
     };
