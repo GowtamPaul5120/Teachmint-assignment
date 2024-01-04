@@ -8,7 +8,7 @@ import resumeBtn from "../../Images/play-button.png"
 import pauseBtn from "../../Images/pause-button.png"
 
 const ProfilePage = () => {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [currentUser, setCurrentUser] = useState([]);
     const [countryList, setCountryList] = useState();
     const [selectedLocation, setSelectedLocation] = useState("");
@@ -22,7 +22,6 @@ const ProfilePage = () => {
     ////////////// Get all country list
     const fetchCountry = async () => {
         try {
-            setLoading(true);
             const newCountryList = await getCountryList();
             setCountryList(newCountryList);
         } catch (error) {
@@ -43,6 +42,13 @@ const ProfilePage = () => {
             setLoading(false);
         }
     };
+    const currentLocationTime = () => {
+        const defaultTime = new Date()
+        const hours = defaultTime.getHours();
+        const minutes = defaultTime.getMinutes();
+        const seconds = defaultTime.getSeconds();
+        setTimeString(`${hours}:${minutes}:${seconds}`)
+    }
 
     ////////////// Set new country
     const handleSelectChange = (event) => {
@@ -116,6 +122,8 @@ const ProfilePage = () => {
     useEffect(() => {
         if (selectedLocation !== "") {
             fetchTime();
+        } else {
+            currentLocationTime()
         }
     }, [selectedLocation]);
 
@@ -130,14 +138,6 @@ const ProfilePage = () => {
             console.error("User data not available.");
         }
     }, [userIdMap, id]);
-
-    useEffect(() => {
-        const defaultTime = new Date()
-        const hours = defaultTime.getHours();
-        const minutes = defaultTime.getMinutes();
-        const seconds = defaultTime.getSeconds();
-        setTimeString(`${hours}:${minutes}:${seconds}`)
-    }, [])
 
     return (
         <>
@@ -157,11 +157,15 @@ const ProfilePage = () => {
                             >
                                 <option value="">India</option>
                                 {countryList &&
-                                    countryList.map((item) => {
+                                    countryList.map((item, index) => {
                                         return (
                                             <option
-                                                value={`${item.continent}/${item.country}${item.state ? `/${item.state}` : ""
-                                                    }`}
+                                                value={
+                                                    `${item.continent}/${item.country}${item.state
+                                                        ? `/${item.state}`
+                                                        : ""}`
+                                                }
+                                                key={index}
                                             >
                                                 {item.country}
                                                 {item.state ? `/ ${item.state}` : ""}
