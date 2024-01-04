@@ -19,22 +19,24 @@ const ProfilePage = () => {
     const userIdMap = useSelector((state) => state.userIdMap);
     const { id } = useParams();
 
-    ////////////// Get time from location
-    const fetchTime = async () => {
-        try {
-            const timeString = await getTime(selectedLocation);
-            setTimeString(timeString);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     ////////////// Get all country list
     const fetchCountry = async () => {
         try {
             setLoading(true);
             const newCountryList = await getCountryList();
             setCountryList(newCountryList);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    ////////////// Get time from location
+    const fetchTime = async () => {
+        try {
+            const timeString = await getTime(selectedLocation);
+            setTimeString(timeString);
         } catch (error) {
             console.error(error);
         } finally {
@@ -129,7 +131,13 @@ const ProfilePage = () => {
         }
     }, [userIdMap, id]);
 
-
+    useEffect(() => {
+        const defaultTime = new Date()
+        const hours = defaultTime.getHours();
+        const minutes = defaultTime.getMinutes();
+        const seconds = defaultTime.getSeconds();
+        setTimeString(`${hours}:${minutes}:${seconds}`)
+    }, [])
 
     return (
         <>
@@ -147,7 +155,7 @@ const ProfilePage = () => {
                                 value={selectedLocation}
                                 onChange={handleSelectChange}
                             >
-                                <option value="">Select a Country</option>
+                                <option value="">India</option>
                                 {countryList &&
                                     countryList.map((item) => {
                                         return (

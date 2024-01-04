@@ -26,7 +26,7 @@ function App() {
       }
     };
     fetchData();
-  }, [id]);
+  }, []);
 
   useEffect(() => {
     const userIdMap = [];
